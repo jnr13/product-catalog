@@ -1,12 +1,66 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {});
+// Recuperer le model Department
+const Department = require("../models/Department");
 
-router.post("/create", (req, res) => {});
+router.get("/", async (req, res) => {
+  try {
+    const departments = await Department.find(); // On recupere tous les Department
+    res.json(departments);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
-router.put("/update", (req, res) => {});
+router.post("/create", async (req, res) => {
+  try {
+    const title = req.body.title;
+    if (title) {
+      const department = new Department({
+        title: title
+      }); // On crée un Department avec comme title : req.body.title
+      await department.save();
+      res.json(department);
+    } else {
+      res.status(400).json({ error: "Wrong parameters" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
-router.delete("/delete", (req, res) => {});
+router.put("/update", async (req, res) => {
+  try {
+    const id = req.query.id;
+    const title = req.body.title;
+    if (id && title) {
+      // on check si
+      const department = await Department.findById(id); // Ici on recupere un département qui a comme id : req.body.id
+      department.title = title; // Ici on met a jour le department qu'on a trouvé grace a l'id
+      await department.save();
+      res.json(department);
+    } else {
+      res.status(400).json({ error: "Wrong parameters" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.delete("/delete", async (req, res) => {
+  try {
+    const id = req.query.id;
+    if (id) {
+      const department = await Department.findById(id); // Ici on recupere un département qui a comme id : req.body.id
+      await department.remove();
+      res.send("Ok");
+    } else {
+      res.status(400).json({ error: "Wrong parameters" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 module.exports = router;
