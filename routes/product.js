@@ -35,12 +35,24 @@ router.get("/", async (req, res) => {
       .populate("category")
       .populate("reviews");
 
-    if (req.query.sort === "price-asc") {
+    if (req.query.sort === "rating-asc") {
+      // ici on ajoute a notre recherche un tri
+      search.sort({ averageRating: 1 });
+    } else if (req.query.sort === "rating-desc") {
+      // ici on ajoute a notre recherche un tri
+      search.sort({ averageRating: -1 });
+    } else if (req.query.sort === "price-asc") {
       // ici on ajoute a notre recherche un tri
       search.sort({ price: 1 });
     } else if (req.query.sort === "price-desc") {
       // ici on ajoute a notre recherche un tri
       search.sort({ price: -1 });
+    }
+
+    if (req.query.page) {
+      const page = req.query.page;
+      const limit = 2;
+      search.limit(limit).skip(limit * page);
     }
 
     // ici attend la fin de la recherche et on range tout dans products
