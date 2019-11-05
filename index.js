@@ -6,7 +6,8 @@ const app = express();
 app.use(bodyParser.json());
 
 mongoose.connect("mongodb://localhost/product-catalog", {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 // On recupere le router du fichier ./routes/index.js
