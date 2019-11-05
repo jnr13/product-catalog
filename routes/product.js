@@ -31,7 +31,9 @@ router.get("/", async (req, res) => {
     const filters = createFilters(req); // On genere les filtres avec ce qu'il y a dans la query
 
     // On lance une recherche avec les potentiels filtres sur les produits
-    const search = Product.find(filters).populate("category");
+    const search = Product.find(filters)
+      .populate("category")
+      .populate("reviews");
 
     if (req.query.sort === "price-asc") {
       // ici on ajoute a notre recherche un tri
