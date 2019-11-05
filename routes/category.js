@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 // Recuperer le model Category
-const Category = require("../models/Category");
 const Department = require("../models/Department");
+const Category = require("../models/Category");
+const Product = require("../models/Product");
 
 router.get("/", async (req, res) => {
   try {
@@ -68,8 +69,20 @@ router.delete("/delete", async (req, res) => {
     if (categoryId) {
       const category = await Category.findById(categoryId); // Ici on recupere une categorie qui a comme id : req.body.id
 
-      if (category) await category.remove();
-      else return res.status(400).json({ error: "Category not found" });
+      if (category) {
+        // On supprime tous les produits associés a cette categorie
+        await Product.deleteMany({ category: categoryId });
+
+        // On recupere tous les produits associés a cette categorie
+        //  const productsToRemove = await Product.find({ category: categoryId });
+        //  for (let i = 0; i < productsToRemove.length; i++) {
+        //    // on les supprime tous. EXTERMINATION
+        //    await productsToRemove[i].remove();
+        //  }
+
+        // On supprime a la fin la categorie
+        await category.remove();
+      } else return res.status(400).json({ error: "Category not found" });
 
       res.send("Category deleted");
     } else {
