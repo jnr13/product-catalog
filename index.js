@@ -5,10 +5,13 @@ const mongoose = require("mongoose");
 const app = express();
 app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost/product-catalog", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost/product-catalog",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+);
 
 // On recupere le router du fichier ./routes/index.js
 const routes = require("./routes/");
