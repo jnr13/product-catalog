@@ -20,5 +20,5 @@ const routes = require("./routes/");
 app.use(routes);
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log("Server started");
+  console.log("Server started trop cool");
 });
